@@ -8,7 +8,7 @@
         :class="{ visible: tab.visible }"
       >{{tab.title}}</li>
     </ul>
-    <slot />
+    <slot class="quadrat"/>
   </div>
 </template>
 
@@ -23,6 +23,9 @@ export default {
       const wasVisible = tab.visible
       this.tabs.forEach(tab => (tab.visible = false))
       if (!wasVisible) tab.visible = true
+      if (tab.armed){
+        tab.class = "quadrat"
+      }
     }
   },
   created () {
@@ -31,8 +34,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .tabs {
+  border-radius: 5px;
   position: absolute;
   left: 0;
   right: 0;
@@ -63,5 +67,23 @@ li:last-child {
 .visible {
   background: #ddd;
   border-bottom-color: white;
+}
+
+.quadrat {
+ -webkit-animation: NAME-YOUR-ANIMATION 1s infinite; /* Safari 4+ */
+  -moz-animation:    NAME-YOUR-ANIMATION 1s infinite; /* Fx 5+ */
+  -o-animation:      NAME-YOUR-ANIMATION 1s infinite; /* Opera 12+ */
+  animation:         NAME-YOUR-ANIMATION 1s infinite; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes NAME-YOUR-ANIMATION {
+0%, 49% {
+    background-color: rgb(117,209,63);
+    border: 3px solid #e50000;
+}
+50%, 100% {
+    background-color: #e50000;
+    border: 3px solid rgb(117,209,63);
+}
 }
 </style>
