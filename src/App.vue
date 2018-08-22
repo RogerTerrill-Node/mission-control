@@ -32,6 +32,17 @@
           @update-strategy="updateStrategy"
         />
       </Tab>
+      <Tab title="Launcher">
+        <div>
+          <Button label="Open Water" @click="openWater" />
+          <Button label="Close Water" @click="closeWater" />
+          <Button label="Open Air" @click="openAir" />
+          <Button label="Close Air" @click="closeAir" />
+          <Button label="Launch" @click="launch" />
+          {{pressure}}
+          <Gauge :progress="70" />
+        </div>
+      </Tab>
     </Tabs>
   </div>
 </template>
@@ -81,6 +92,12 @@ rocketApi.onStrategyError(msg => {
   bus.$emit('strategy-error', msg)
 })
 
+setInterval(() => {
+  rocketApi.getPressure().then(resp => {
+    bus.$emit('particle-pressure', resp.result)
+  })
+}, 2000)
+
 export default {
   name: 'app',
   components: {
@@ -100,7 +117,8 @@ export default {
     rocketData: {},
     strategies: [],
     armed: false,
-    bus
+    bus,
+    pressure: -1
   }),
   computed: {
     accelerometer () {
@@ -130,7 +148,12 @@ export default {
     resetParachute: rocketApi.resetParachute,
     activateStrategy: rocketApi.activateStrategy,
     updateStrategy: rocketApi.updateStrategy,
-    deactivateStrategy: rocketApi.deactivateStrategy
+    deactivateStrategy: rocketApi.deactivateStrategy,
+    openAir: rocketApi.openAir,
+    closeAir: rocketApi.closeAir,
+    openWater: rocketApi.openWater,
+    closeWater: rocketApi.closeWater,
+    launch:rocketApi.launch
   },
   mounted() {
     bus.$on('rocket-data', msg => {
@@ -144,6 +167,9 @@ export default {
     })
     bus.$on('strategy-error', msg => {
       console.error('strategy error:', JSON.stringify(msg, null, 2))
+    })
+    bus.$on('particle-pressure', msg => {
+      this.pressure = msg
     })
   }
 }

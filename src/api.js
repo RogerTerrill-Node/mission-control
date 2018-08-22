@@ -41,6 +41,28 @@ export default (opts = {}) => {
 
     activateStrategy: key => rocket.emit('activate-strategy', key),
     updateStrategy: data => rocket.emit('update-strategy', data),
-    deactivateStrategy: key => rocket.emit('deactivate-strategy', key)
+    deactivateStrategy: key => rocket.emit('deactivate-strategy', key),
+
+    openAir: () => invokeParticle("openAir"),
+    closeAir: () => invokeParticle("closeAir"),
+    openWater: () => invokeParticle("openWater"),
+    closeWater: () => invokeParticle("closeWater"),
+    launch: () => invokeParticle("launch"),
+
+    getPressure: () => invokeParticle('pressure', 'GET')
   }
+}
+
+function invokeParticle(name, method = 'POST') {
+  // Default options are marked with *
+    return fetch(`https://api.particle.io/v1/devices/1f003a000f47363336383437/${name}`, {
+        method, // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          Authorization: "Bearer c05e71a71f3a227f98da1d4f12fd8599970c5a15",
+          "Content-Type": "application/json; charset=utf-8",
+          // "Content-Type": "application/x-www-form-urlencoded",
+      },
+        body: method === 'GET' ? undefined : JSON.stringify({ args: 'none' }), // body data type must match "Content-Type" header
+    })
+    .then(response => response.json()); // parses response to JSON
 }
