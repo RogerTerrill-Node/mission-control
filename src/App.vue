@@ -16,7 +16,7 @@
       <Tab title="Parsed">
         <Parsed :rocketData="rocketData" />
       </Tab>
-      <Tab title="Actions">
+      <Tab :armed="armed" title="Actions">
         <Actions
           @arm-parachute="armParachute"
           @disarm-parachute="disarmParachute"
@@ -99,6 +99,7 @@ export default {
   data: () => ({
     rocketData: {},
     strategies: [],
+    armed: false,
     bus
   }),
   computed: {
@@ -117,8 +118,14 @@ export default {
     }
   },
   methods: {
-    armParachute: rocketApi.armParachute,
-    disarmParachute: rocketApi.disarmParachute,
+    armParachute(){
+      rocketApi.armParachute(),
+      this.armed = true
+      },
+    disarmParachute(){
+      rocketApi.disarmParachute(),
+      this.armed = false
+      },
     deployParachute: rocketApi.deployParachute,
     resetParachute: rocketApi.resetParachute,
     activateStrategy: rocketApi.activateStrategy,
